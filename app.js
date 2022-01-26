@@ -22,24 +22,34 @@ const item3 = new Item({
     name: "<-- Hit this to delete an item"
 });
 
-Item.insertMany([item1, item2, item3], (err) => {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log("Berhasil menambahkan data");
-    }
-})
-
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-
-    res.render("list", {
-        title: "Today",
-        listItem: items
-    });
+    
+    Item.find((err, results) => {
+        
+        if (err) {
+            console.log(err);
+        } else {
+            if (results.length === 0) {
+                Item.insertMany([item1, item2, item3], (err) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Berhasil menambahkan data");
+                    }
+                })
+                res.redirect("/");
+            } else {
+                res.render("list", {
+                    title: "Today",
+                    listItem: results
+                });
+            }
+        }
+    })
 })
 
 app.get("/work", (req, res) => {
