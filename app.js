@@ -1,25 +1,43 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const app = express();
-const items = ["Bangun Tidur", "Mandi", "Sholat Subuh"];
-const workItems = [];
+
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+const itemsSchema = {
+    name: String
+};
+const Item = mongoose.model("item", itemsSchema);
+
+const item1 = new Item({
+    name: "Welcome to your todo list"
+});
+
+const item2 = new Item({
+    name: "Hit the + button to add a new item"
+});
+
+const item3 = new Item({
+    name: "<-- Hit this to delete an item"
+});
+
+Item.insertMany([item1, item2, item3], (err) => {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log("Berhasil menambahkan data");
+    }
+})
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-    const today = new Date();
-    const options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-    };
-    const day = today.toLocaleDateString("id-ID", options);
 
     res.render("list", {
-        title: day,
+        title: "Today",
         listItem: items
     });
 })
