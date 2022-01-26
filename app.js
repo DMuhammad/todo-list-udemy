@@ -64,14 +64,21 @@ app.get("/about", (req, res) => {
 })
 
 app.post("/", (req, res) => {
-    console.log(req.body);
-    if(req.body.button === "Work List"){
-        workItems.push(req.body.newItem);
-        res.redirect("/work");
-    }else{
-        items.push(req.body.newItem);
-        res.redirect("/");
-    }
+    const itemName = req.body.newItem;
+    const item = new Item({
+        name: itemName
+    });
+    
+    item.save();
+    res.redirect("/");
+
+    // if(req.body.button === "Work List"){
+    //     workItems.push(req.body.newItem);
+    //     res.redirect("/work");
+    // }else{
+    //     items.push(req.body.newItem);
+    //     res.redirect("/");
+    // }
 })
 
 app.listen("4000", () => {
