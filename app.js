@@ -71,14 +71,17 @@ app.post("/", (req, res) => {
     
     item.save();
     res.redirect("/");
+})
 
-    // if(req.body.button === "Work List"){
-    //     workItems.push(req.body.newItem);
-    //     res.redirect("/work");
-    // }else{
-    //     items.push(req.body.newItem);
-    //     res.redirect("/");
-    // }
+app.post("/delete", (req, res) => {
+    const getItemId = req.body.check;
+    Item.findByIdAndRemove(getItemId, err => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.redirect("/");
+        }
+    })
 })
 
 app.listen("4000", () => {
